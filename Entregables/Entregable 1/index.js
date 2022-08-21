@@ -14,9 +14,7 @@ if(input=!""){
         let gusto = prompt("ingresa el gusto").toUpperCase();
         gustos.push(gusto)
         alert(`Elegiste: ${gusto}`); 
-    }  
-    
-    //let entry = prompt("ingrese un nombre");
-    }
+    }    
+ }
 alert(`tus gustos son: ${gustos}`);
 alert("Gracias por compartirme tus gustos de helado")
