@@ -1,4 +1,6 @@
+
 let input = prompt("Ingrese nombre:").toUpperCase();
+while(input != "ESC"){
 while(input === ""){
     alert("nombre invalido")
     input = prompt("Ingrese nombre:").toUpperCase();
@@ -18,3 +20,5 @@ if(input=!""){
  }
 alert(`tus gustos son: ${gustos}`);
 alert("Gracias por compartirme tus gustos de helado")
+input = prompt("Ingrese nombre:").toUpperCase();
+}
