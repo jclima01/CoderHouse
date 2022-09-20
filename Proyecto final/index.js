@@ -22,8 +22,8 @@ const interes = 0.14;
 //     nombre = document.getElementById("nombre").value
 //     apellido = document.getElementById("apellido").value
 //     email = document.getElementById("email").value
-//     monto = document.getElementById('monto').value
-//     cantidadDeCuotas = document.getElementById('cuotas').value
+//     montoSolicitado = document.getElementById('montoSolicitado').value
+//     cantidadDeCuotas = document.getElementById('cantidadDeCuotas').value
 //     
 // }
 
