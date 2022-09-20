@@ -5,13 +5,8 @@ const apellido = document.getElementById("apellido");
 const email = document.getElementById("email");
 const montoSolicitado = document.getElementById("montoSolicitado");
 const cantidadDeCuotas = document.getElementById("cantidadDeCuotas");
-const montoFinal = document.getElementById("montoFinal");
-const cuotasFinales = document.getElementById("cuotasFinales");
-const intereses = document.getElementById("intereses");
-const montoTotalADevolver = document.getElementById("montoTotalADevolver");
-const detallePrestamo = document.getElementById("detallePrestamo");
-
-const interes = 0.15; 
+const intereses = document.getElementById("intereses")
+const interes = 0.14; 
 
 // class Prestamo {
 //     constructor(nombre,apellido,email,monto,cantidadDeCuotas){
@@ -32,28 +27,26 @@ const interes = 0.15;
 //     
 // }
 
+const obtenerTotal = (cuotaPrestamo) => {
+  const montoTotalADevolver = Math.ceil(cuotaPrestamo) * cantidadDeCuotas.value;
 
+  const prestamo = {
+    montoSolicitado: montoSolicitado.value,
+    cantidadDeCuotas: cantidadDeCuotas.value,
+    montoTotalADevolver: montoTotalADevolver,
+    intereses: montoTotalADevolver - montoSolicitado.value,
+   
+  };
+
+  pintarPrestamo(prestamo);
+  guardarPrestamoStorage(prestamo);
+};
 const CalcularCuotaPrestamo = () => {
   const cuotaPrestamo = (interes * montoSolicitado.value) / (1 - (1 + interes) ** -cantidadDeCuotas.value);
   obtenerTotal(cuotaPrestamo);
 
 };
 
-// Obtener el total del préstamo
-const obtenerTotal = (cuotaPrestamo) => {
-  const montoTotalADevolver = Math.ceil(cuotaPrestamo) * cantidadDeCuotas.value;
-
-  // Creamos nuestro objeto
-  const prestamo = {
-    montoSolicitado: montoSolicitado.value,
-    cantidadDeCuotas: cantidadDeCuotas.value,
-    intereses: montoTotalADevolver - montoSolicitado.value,
-    montoTotalADevolver: montoTotalADevolver,
-  };
-
-  pintarPrestamo(prestamo);
-  guardarPrestamoStorage(prestamo);
-};
 
 const pintarPrestamo = (prestamo) => {
   montoFinal.textContent = `$${prestamo.montoSolicitado}`;
@@ -83,9 +76,3 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-
-
-
-
-// cuota préstamo = (Monto * (TEM x (1 + TEM) ^ n)) / ((1 + TEM) ^ n) - 1)
-// Monto (valor a ser prestado), n (numero de meses), TEM (Tasa Efectiva Mensual)
