@@ -61,18 +61,18 @@ formulario.addEventListener("submit", (e) => {
 });
 
 
-const guardarPrestamoStorage = (prestamo) => {
-  localStorage.setItem("prestamo", JSON.stringify(prestamo));
-};
+// const guardarPrestamoStorage = (prestamo) => {
+//   localStorage.setItem("prestamo", JSON.stringify(prestamo));
+// };
 
-const obtenerPrestamoStorage = () => {
-  const prestamoStorage = JSON.parse(localStorage.getItem("prestamo"));
-  pintarPrestamo(prestamoStorage);
-};
+// const obtenerPrestamoStorage = () => {
+//   const prestamoStorage = JSON.parse(localStorage.getItem("prestamo"));
+//   pintarPrestamo(prestamoStorage);
+// };
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (localStorage.getItem("prestamo")) {
-    obtenerPrestamoStorage();
-  }
-});
+// document.addEventListener("DOMContentLoaded", () => {
+//   if (localStorage.getItem("prestamo")) {
+//     obtenerPrestamoStorage();
+//   }
+// });
 
