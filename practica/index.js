@@ -4,30 +4,35 @@ const productsDB = [
         id: 1,
         nombre: 'Calabresa',
         precio: 1950,
+        descripcion: 'Pizza de Muzzarella, Longaniza Calabresa, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.',
         imagen: 'Images/Calabresa.png'
     },
     {
         id: 2,
         nombre: 'Especial',
         precio: 2000,
+        descripcion: 'Pizza de Muzzarella, Jamon Natural, Morrones , Salsa de Tomate, Condimentos y Aceitunas Verdes.',
         imagen: 'Images/Especial.png'
     },
     {
         id: 3,
         nombre: 'Fugazza',
         precio: 1050,
+        descripcion: 'Pizza de Cebolla, Condimentos y Aceitunas Verdes. (sin Quesos)',
         imagen: 'Images/Fugazza.png'
     },
     {
         id: 4,
         nombre: 'Muzza y jamon',
         precio: 1950,
+        descripcion: 'Pizza de Muzzarella, Jamon Natural, Salsa de Tomate, Condimentos y Aceitunas Verdes.',
         imagen: 'Images/Muzza y jamon.png'
     },
     {
         id: 5,
         nombre: 'Muzza y Morron',
         precio: 1500,
+        descripcion: 'Pizza de Muzzarella, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.',
         imagen: 'Images/Muzza y Morron.png'
     },
 
@@ -35,6 +40,7 @@ const productsDB = [
         id: 6,
         nombre: 'Muzzarella',
         precio: 1100,
+        descripcion: 'Pizza de Muzzarella, Salsa de Tomate, Condimentos y Aceitunas Verdes.',
         imagen: 'Images/Muzzarella.png'
     }
 
@@ -52,12 +58,12 @@ const divisa = '$';
 function renderizarProductos() {
     productsDB.forEach((prod) => {
         let productoHTML = `
-        <div class="col-12 col-md-6 nb-5 d-flex justify-content-center">
+        <div class="col-12 col-md-4 nb-5 d-flex p-1 justify-content-center">
         <div class="card text-light bg-dark" style="width: 18rem;">
             <img class="card-Img-top" src="${prod.imagen}" alt="card image cap">
             <div class="card-body">
                 <h5 class="card-title">${prod.nombre}</h5>
-                <p class="card-text">Some quick eample text to build on the card title and make up the bulk of the card's context.</p>
+                <p class="card-text">${prod.descripcion}</p>
                 <p>$${prod.precio}
                 <button class="btn btn-primary" onclick="agregarProductoAlCarrito(${prod.id})">Añadir al carrito</button>
             </div>
@@ -76,18 +82,15 @@ renderizarProductos();
 
 
 function agregarProductoAlCarrito(id) {
-    
+
     let producto = productsDB.find((producto) => producto.id === id)
-    
-    console.log(producto);
+
 
     let productoEnCarrito = carrito.find((producto) => producto.id === id)
-    if (productoEnCarrito) {
-        productoEnCarrito.cantidad++;
-    } else {
-        producto.cantidad = 1;
-        carrito.push(producto)
-    }
+    productoEnCarrito? productoEnCarrito.cantidad++ : 
+        (producto.cantidad = 1,
+        carrito.push(producto))
+    
 
     renderizarCarrito()
     calcularTotal()
@@ -95,30 +98,28 @@ function agregarProductoAlCarrito(id) {
 }
 function renderizarCarrito() {
     let htmlCarrito = ""
-    carrito.forEach((prod,id) => {
+    carrito.forEach((prod, id) => {
         htmlCarrito += `
-    <div class="col-12 mb-5 d-flex justify-content-center">
-        <div class="card text-dark flex-row" style="width: 30rem;">
-            <div>    
-                <img style="width: 100px;" src="${prod.imagen}" alt="card image cap">
-            </div>
+
+        <div class="card w-50">
             <div class="card-body">
                 <h5 class="card-title">${prod.nombre}</h5>
-                <p>$${prod.precio}
-                <p>Cantidad: ${prod.cantidad}</p>
+                <p class="card-text">Cantidad: ${prod.cantidad}</p>
                 <button class="btn btn-danger" onclick="eliminarProductoDelCarrito(${id})">Eliminar</button>
             </div>
-            
-        </div> 
-        
-    `;
-    carritoHTML.innerHTML = htmlCarrito;    
-});
-    
-    
+        </div>
+        `
+;
+
+        carritoHTML.innerHTML = htmlCarrito;
+    });
 
 }
 
+function actualizarCarrito() {
+    //Borrar HTML
+    carrito.textContent = '';
+}
 function calcularTotal() {
     let total = 0;
     carrito.forEach((prod) => {
@@ -133,23 +134,26 @@ function calcularTotal() {
 
 //****Editar carrito */
 //* Cuantos hay? Eliminar un producto o vacir el carrito */
-function eliminarProductoDelCarrito(id){
-    
+function eliminarProductoDelCarrito(id) {
+
     carrito[id].cantidad--;
 
-    if(carrito[id].cantidad === 0){
-        carrito.splice(id,1);
+    if (carrito[id].cantidad === 0) {
+        carrito.splice(id, 1);
 
     }
+
     calcularTotal();
+    
     renderizarCarrito();
+
 }
 
-function vaciarCarrito(){
+function vaciarCarrito() {
     carrito = [];
     renderizarCarrito();
     calcularTotal();
 }
 
 const botonVaciar = document.querySelector("#boton-vaciar");
-botonVaciar.addEventListener("click",vaciarCarrito);
+botonVaciar.addEventListener("click", vaciarCarrito);

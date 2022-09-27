@@ -1,92 +1,31 @@
-<!doctype html>
-<html lang="en">
-
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Simulador de prestamos personales</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    
+        
+    </script>
 </head>
-
 <body>
-
-  <h1>Simulador de prestamos personales</h1>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
-    crossorigin="anonymous"></script>
-
-  <div class="container">
-    <form class="row g-3 mt-3" id="formulario">
-      <div class="col-6">
-        <label for="nombre" class="form-label">Nombre:</label>
-        <input type="text" class="form-control" id="nombre" placeholder="Escribe tu nombre">
-
-      </div>
-      <div class="col-6">
-        <label for="apellido" class="form-label">Apellido:</label>
-        <input type="text" class="form-control" id="apellido" placeholder="Escribe tu apeliido">
-      </div>
-      <div class="col-6">
-        <label for="email" class="form-label">Email:</label>
-        <input type="text" class="form-control" id="email" placeholder="Escribe tu Email" onkeyup="validarEmail(this)">
-        <span class="text-danger" id="resultado"></span>
-      </div>
-      <div class="col-6">
-        <label for="montoSolicitado" class="form-label">Monto solicitdo:</label>
-        <input type="text" class="form-control" id="montoSolicitado" placeholder="¿Cuánto necesitas?"
-          onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
-      </div>
-      <div class="col-6">
-        <label for="cantidadDeCuotas" class="form-label">Cantidad de cuotas:</label>
-        <input type="text" class="form-control" id="cantidadDeCuotas"
-          placeholder="¿En cuantos meses queres pagar tu crédito?"
-          onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
-      </div>
-
-      <input class="w-100 btn btn-primary btn-lg" id="simulate" type="submit" value="Simular Prestamo Personal">
-
-      <div class="row g-5 ">
-        <div class="col-md-5 col-lg-4 order-md-last">
-          <h4 class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text-primary">Detalle de tu prestamo</span>
-          </h4>
-          <ul class="list-group mb-3">
-            <li class="list-group-item d-flex justify-content-between lh-sm">
-              <div>
-                <h6 class="my-0">Préstamo</h6>
-                <p class="text-muted">Monto del préstamo</p>
-              </div>
-              <span class="text-muted" id="montoFinal">$0</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between lh-sm">
-              <div>
-                <h6 class="my-0">Cuotas</h6>
-                <p class="text-muted">Cantidad de cuotas</p>
-              </div>
-              <span class="text-muted" id="cuotasFinales">0</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between bg-light">
-              <div class="text-success">
-                <h6 class="my-0">Intereses</h6>
-              </div>
-              <span class="text-success" id="intereses">$0</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between">
-              <span>Total a devolver</span>
-              <strong id="montoTotalADevolver">$0</strong>
-            </li>
-          </ul>
+    <div class="container">
+        <div class="row">
+            <!-- Elementos generados a partir del JSON -->
+            <main id="items" class="col-sm-8 row"></main>
+            <!-- Carrito -->
+            <aside class="col-sm-4">
+                <h2>Carrito</h2>
+                <!-- Elementos del carrito -->
+                <ul id="carrito" class="list-group"></ul>
+                <hr>
+                <!-- Precio total -->
+                <p class="text-right">Total: <span id="total"></span>&euro;</p>
+                <button id="boton-vaciar" class="btn btn-danger">Vaciar</button>
+            </aside>
         </div>
-
-    </form>
-
-  </div>
-
-
-  <script src="./index.js"></script>
-
+    </div>
+    <script src="./index.js"></script>
 </body>
-
 </html>
