@@ -1,5 +1,5 @@
 
-class Productos{
+class Producto{
     constructor(id,nombre,precio,descripcion,imagen){
         this.id = id;
         this.nombre = nombre;
@@ -10,26 +10,26 @@ class Productos{
     }
 }
 
-const productsDB = [new Productos(1, 'Calabresa', 1950, 'Pizza de Muzzarella, Longaniza Calabresa, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Calabresa.png'),
-                    new Productos(2, 'Especial', 2000, "Pizza de Muzzarella, Jamon Natural, Morrones , Salsa de Tomate, Condimentos y Aceitunas Verdes.", 'Images/Especial.png'),
-                    new Productos(3, 'Fugazza', 1050, 'Pizza de Cebolla, Condimentos y Aceitunas Verdes. (sin Quesos)', 'Images/Fugazza.png'),
-                    new Productos(4, 'Muzza y jamon', 1950, 'Pizza de Muzzarella, Jamon Natural, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzza y jamon.png'),
-                    new Productos(5, 'Muzza y Morron', 1950, 'Pizza de Muzzarella, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzza y Morron.png'),
-                    new Productos(6, 'Muzzarella', 1950, 'Pizza de Muzzarella, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzzarella.png')
+const productsDB = [new Producto(1, 'Calabresa', 1950, 'Pizza de Muzzarella, Longaniza Calabresa, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Calabresa.png'),
+                    new Producto(2, 'Especial', 2000, "Pizza de Muzzarella, Jamon Natural, Morrones , Salsa de Tomate, Condimentos y Aceitunas Verdes.", 'Images/Especial.png'),
+                    new Producto(3, 'Fugazza', 1050, 'Pizza de Cebolla, Condimentos y Aceitunas Verdes. (sin Quesos)', 'Images/Fugazza.png'),
+                    new Producto(4, 'Muzza y jamon', 1950, 'Pizza de Muzzarella, Jamon Natural, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzza y jamon.png'),
+                    new Producto(5, 'Muzza y Morron', 1950, 'Pizza de Muzzarella, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzza y Morron.png'),
+                    new Producto(6, 'Muzzarella', 1950, 'Pizza de Muzzarella, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzzarella.png')
 ]
-console.log(productsDB)
-
-
 localStorage.setItem("productsDB", JSON.stringify(productsDB));
 
-
-
 let carrito = [];
-
+let carritoStorage = JSON.parse(localStorage.getItem("carritoStorage"));
 const items = document.querySelector("#items");
 const carritoHTML = document.querySelector("#carrito");
-const divisa = '$';
 
+const botonVaciar = document.querySelector("#boton-vaciar");
+
+
+if(carritoStorage){
+    carrito = carritoStorage;
+}
 
 
 function renderizarProductos() {
@@ -52,10 +52,12 @@ function renderizarProductos() {
     });
 }
 renderizarProductos();
-
+renderizarCarrito();
+calcularTotal();
 
 function agregarProductoAlCarrito(id) {
     let productsDB = JSON.parse(localStorage.getItem("productsDB"));
+    
     let producto = productsDB.find((producto) => producto.id === id)
 
 
@@ -63,14 +65,13 @@ function agregarProductoAlCarrito(id) {
     productoEnCarrito? productoEnCarrito.cantidad++ : 
         (producto.cantidad = 1,
         carrito.push(producto))
-    
-
+    guardarCarritoStorage()
     renderizarCarrito()
     calcularTotal()
 
 }
 function renderizarCarrito() {
-    let htmlCarrito = ""
+    htmlCarrito = ""
     carrito.forEach((prod, id) => {
         htmlCarrito += `
 
@@ -97,21 +98,20 @@ function calcularTotal() {
         total += prod.precio * prod.cantidad
     });
 
-    // console.log(total);
+ 
     const t = document.getElementById("total");
     t.innerHTML = `<h5>$${total}</h5>`
 
 }
 
-//****Editar carrito */
-//* Cuantos hay? Eliminar un producto o vacir el carrito */
+
 function eliminarProductoDelCarrito(id) {
 
     carrito[id].cantidad--;
     carrito[id].cantidad === 0 && carrito.splice(id, 1)
    
     carrito.length === 0 && (carritoHTML.innerHTML = "");
-    
+    guardarCarritoStorage();
     calcularTotal();
     
     renderizarCarrito();
@@ -121,27 +121,40 @@ function eliminarProductoDelCarrito(id) {
 function vaciarCarrito() {
     carrito = [];
     carrito.length === 0 && (carritoHTML.innerHTML = "");
+    guardarCarritoStorage();
     renderizarCarrito();
     calcularTotal();
     
 }
-
-const botonVaciar = document.querySelector("#boton-vaciar");
 botonVaciar.addEventListener("click", vaciarCarrito);
 
-// // //**Guardar los datos en Storage**/
-// // const guardarCarritoStorage = (carrito) => {
-// //     let carrito = JSON.parse(localStorage.getItem("carrito"));
-// //   };
-  
-// //   const getCarritoStorage = () => {
-// //     const carritoStorage = JSON.parse(localStorage.getItem("carrito"));
-// //     renderizarCarrito(carritoStorage);
-// //   };
-  
-// //   document.addEventListener("DOMContentLoaded", () => {
-// //     if (localStorage.getItem("carrito")) {
-// //       getCarritoStorage();
-// //     }
-// //   });
-  
+let guardarCarritoStorage = () => {
+    localStorage.setItem("carritoStorage", JSON.stringify(carrito));
+}
+
+
+// const botonAgregar = document.querySelector("#boton-agregar")
+
+
+// botonAgregar.addEventListener("click",(e)=> {
+//     agregarNuevosProducto();
+// })
+// function agregarNuevosProducto(){
+
+//     let id = productsDB.length +1;
+//     let nombre = document.getElementById("nombre").value;
+//     let precio = document.getElementById("precio").value;
+//     let descripcion = document.getElementById("descripcion").value;
+//     let imagen = document.getElementById("imagen").value;
+//     productsDB.push(
+//         new Producto(
+//             id,
+//             nombre, 
+//             precio,
+//             descripcion,
+//             imagen
+//         )
+//     );
+
+// }
+
