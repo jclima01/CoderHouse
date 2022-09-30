@@ -28,11 +28,8 @@ const botonEliminar = document.getElementById("boton-eliminar");
 
 
 let carritoStorage = JSON.parse(localStorage.getItem("carritoStorage"));
-if(carritoStorage)  {
-    carrito = carritoStorage
-}else{
-    carrito = []
-}
+carritoStorage ? carrito = carritoStorage : carrito = []
+
 renderizarProductos();
 renderizarCarrito();
 calcularTotal();
@@ -141,19 +138,15 @@ function agregarNuevosProducto(){
     let precio = document.getElementById("precio").value;
     let descripcion = document.getElementById("descripcion").value;
     let imagen = document.getElementById("imagen").value;
-    if(productsDB.find((producto) => producto.nombre === nombre)){
-        alert("producto ya existe")
-    } else {
-    productsDB.push(
-        new Producto(
-            id,
-            nombre, 
-            precio,
-            descripcion,
-            imagen
-        )
+    (productsDB.find((producto) => producto.nombre === nombre))? alert("producto ya existe") : productsDB.push(new Producto(
+                                                                                                                            id,
+                                                                                                                            nombre, 
+                                                                                                                            precio,
+                                                                                                                            descripcion,
+                                                                                                                            imagen
+                                                                                                                        )
     );
-    }
+    
     guardarProductosStorage();
     
     
