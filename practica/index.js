@@ -17,7 +17,7 @@ const productsDB = [new Producto(1, 'Calabresa', 1950, 'Pizza de Muzzarella, Lon
                     new Producto(5, 'Muzza y Morron', 1950, 'Pizza de Muzzarella, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzza y Morron.png'),
                     new Producto(6, 'Muzzarella', 1950, 'Pizza de Muzzarella, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzzarella.png')
 ]
-localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
+
 
 let carrito = [];
 const items = document.querySelector("#items");
@@ -30,13 +30,15 @@ const botonEliminar = document.getElementById("boton-eliminar");
 let carritoStorage = JSON.parse(localStorage.getItem("carritoStorage"));
 if(carritoStorage)  {
     carrito = carritoStorage
+}else{
+    carrito = []
 }
 
 
 
 function renderizarProductos() {
     let productoHTML = ""
-    let productsDB = JSON.parse(localStorage.getItem("productsDBStorage"));
+    
     productsDB.forEach((prod) => {
         productoHTML = `
         <div class="col-12 col-md-4 nb-5 d-flex p-1 justify-content-center">
@@ -61,7 +63,7 @@ calcularTotal();
 function agregarProductoAlCarrito(id) {
     
     let producto = productsDB.find((producto) => producto.id === id)
-
+    console.log(producto)
 
     let productoEnCarrito = carrito.find((producto) => producto.id === id)
     productoEnCarrito ? productoEnCarrito.cantidad++ : (producto.cantidad = 1, 
@@ -124,11 +126,20 @@ function vaciarCarrito() {
     carrito = [];
     carrito.length === 0 && (carritoHTML.innerHTML = "");
     guardarCarritoStorage();
+    
     renderizarCarrito();
+    Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Carrito vacio!',
+        showConfirmButton: false,
+        timer: 800
+      })
     calcularTotal();
+
     
 }
-botonVaciar.addEventListener("click", vaciarCarrito);
+
 
 let guardarCarritoStorage = () => {
     localStorage.setItem("carritoStorage", JSON.stringify(carrito));
@@ -164,6 +175,11 @@ function agregarNuevosProducto(){
     
     
 }
+botonVaciar.addEventListener("click", (e)=>{
+    e.preventDefault();
+    vaciarCarrito();
+});
+
 botonAgregar.addEventListener("click",(e)=> {
     e.preventDefault();
     agregarNuevosProducto();
@@ -172,17 +188,39 @@ botonAgregar.addEventListener("click",(e)=> {
     console.log(productsDB)
 })
 
-
-
-
-// function eliminarProducto (){
-      
- 
-// }
-
-// botonEliminar.addEventListener("click", (e) => {
-//     e.preventDefault()
-//     eliminarProducto()
-//     items.innerHTML = ""
-//     renderizarProductos();
-// })
+botonEliminar.addEventListener("click",(e)=>{
+    e.preventDefault();
+    eliminarProducto()
+    items.innerHTML = ""
+    renderizarProductos();
+    
+})
+function capitalizarPrimeraLetra(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+function eliminarProducto() {
+    
+    let nombre = document.getElementById("nombre-eliminar").value.toLowerCase()
+    let n = capitalizarPrimeraLetra(nombre)
+    
+    let producto = productsDB.find((producto) => producto.nombre === n)
+    
+    if(producto){
+        productsDB.splice(producto.id-1,1)
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Producto eliminado',
+            showConfirmButton: false,
+            timer: 800
+          })
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Producto no encontrado',
+            footer: '<a href="">Ingrese un producto válido</a>'
+          })
+    }
+    localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
+}
