@@ -197,7 +197,7 @@ let guardarProductosStorage = () => {
 
 
 
-
+//listeners
 botonVaciar.addEventListener("click", (e) => {
     e.preventDefault();
     vaciarCarrito();
