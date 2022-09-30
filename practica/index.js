@@ -1,21 +1,21 @@
 
-class Producto{
-    constructor(id,nombre,precio,descripcion,imagen){
+class Producto {
+    constructor(id, nombre, precio, descripcion, imagen) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
         this.descripcion = descripcion;
         this.imagen = imagen;
-        
+
     }
 }
 
 const productsDB = [new Producto(1, 'Calabresa', 1950, 'Pizza de Muzzarella, Longaniza Calabresa, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Calabresa.png'),
-                    new Producto(2, 'Especial', 2000, "Pizza de Muzzarella, Jamon Natural, Morrones , Salsa de Tomate, Condimentos y Aceitunas Verdes.", 'Images/Especial.png'),
-                    new Producto(3, 'Fugazza', 1050, 'Pizza de Cebolla, Condimentos y Aceitunas Verdes. (sin Quesos)', 'Images/Fugazza.png'),
-                    new Producto(4, 'Muzza y jamon', 1950, 'Pizza de Muzzarella, Jamon Natural, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzza y jamon.png'),
-                    new Producto(5, 'Muzza y Morron', 1950, 'Pizza de Muzzarella, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzza y Morron.png'),
-                    new Producto(6, 'Muzzarella', 1950, 'Pizza de Muzzarella, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzzarella.png')
+new Producto(2, 'Especial', 2000, "Pizza de Muzzarella, Jamon Natural, Morrones , Salsa de Tomate, Condimentos y Aceitunas Verdes.", 'Images/Especial.png'),
+new Producto(3, 'Fugazza', 1050, 'Pizza de Cebolla, Condimentos y Aceitunas Verdes. (sin Quesos)', 'Images/Fugazza.png'),
+new Producto(4, 'Muzza y jamon', 1950, 'Pizza de Muzzarella, Jamon Natural, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzza y jamon.png'),
+new Producto(5, 'Muzza y Morron', 1950, 'Pizza de Muzzarella, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzza y Morron.png'),
+new Producto(6, 'Muzzarella', 1950, 'Pizza de Muzzarella, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'Images/Muzzarella.png')
 ]
 
 
@@ -36,7 +36,7 @@ calcularTotal();
 
 function renderizarProductos() {
     let productoHTML = ""
-    
+
     productsDB.forEach((prod) => {
         productoHTML = `
         <div class="col-12 col-md-4 nb-5 d-flex p-1 justify-content-center">
@@ -56,12 +56,12 @@ function renderizarProductos() {
 }
 //carrito
 function agregarProductoAlCarrito(id) {
-    
+
     let producto = productsDB.find((producto) => producto.id === id)
 
     let productoEnCarrito = carrito.find((producto) => producto.id === id)
-    productoEnCarrito ? productoEnCarrito.cantidad++ : (producto.cantidad = 1, 
-                                                        carrito.push(producto))
+    productoEnCarrito ? productoEnCarrito.cantidad++ : (producto.cantidad = 1,
+        carrito.push(producto))
     guardarCarritoStorage()
     renderizarCarrito()
     calcularTotal()
@@ -81,7 +81,7 @@ function renderizarCarrito() {
             </div>
         </div>
         `
-;
+            ;
 
         carritoHTML.innerHTML = htmlCarrito;
     });
@@ -93,7 +93,7 @@ function calcularTotal() {
         total += prod.precio * prod.cantidad
     });
 
- 
+
     const t = document.getElementById("total");
     t.innerHTML = `<h5>$${total}</h5>`
 
@@ -102,11 +102,11 @@ function eliminarProductoDelCarrito(id) {
 
     carrito[id].cantidad--;
     carrito[id].cantidad === 0 && carrito.splice(id, 1)
-   
+
     carrito.length === 0 && (carritoHTML.innerHTML = "");
     guardarCarritoStorage();
     calcularTotal();
-    
+
     renderizarCarrito();
 
 }
@@ -114,7 +114,7 @@ function vaciarCarrito() {
     carrito = [];
     carrito.length === 0 && (carritoHTML.innerHTML = "");
     guardarCarritoStorage();
-    
+
     renderizarCarrito();
     Swal.fire({
         position: 'top-end',
@@ -122,87 +122,99 @@ function vaciarCarrito() {
         title: 'Carrito vacio!',
         showConfirmButton: false,
         timer: 800
-      })
+    })
     calcularTotal();
 
-    
+
 }
 let guardarCarritoStorage = () => {
     localStorage.setItem("carritoStorage", JSON.stringify(carrito));
 }
 //catalogo
-function agregarNuevosProducto(){
-    
-    let id = productsDB.length +1;
+function agregarNuevosProducto() {
+
+    let id = productsDB.length + 1;
     let nombre = document.getElementById("nombre").value;
     let precio = document.getElementById("precio").value;
     let descripcion = document.getElementById("descripcion").value;
     let imagen = document.getElementById("imagen").value;
-    (productsDB.find((producto) => producto.nombre === nombre))? alert("producto ya existe") : productsDB.push(new Producto(
-                                                                                                                            id,
-                                                                                                                            nombre, 
-                                                                                                                            precio,
-                                                                                                                            descripcion,
-                                                                                                                            imagen
-                                                                                                                        )
-    );
-    
+    if (productsDB.find((producto) => producto.nombre === nombre)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Producto ya existente',
+            footer: '<a href="">Ingrese un producto nuevo</a>'
+        })
+    } else {
+        productsDB.push(new Producto(
+            id,
+            nombre,
+            precio,
+            descripcion,
+            imagen
+        )
+        );
+    }
+
     guardarProductosStorage();
-    
-    
+
+
 }
 function capitalizarPrimeraLetra(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 function eliminarProducto() {
-    
+
     let nombre = document.getElementById("nombre-eliminar").value.toLowerCase()
     let n = capitalizarPrimeraLetra(nombre)
-    
+
     let producto = productsDB.find((producto) => producto.nombre === n)
-    
-    if(producto){
-        productsDB.splice(producto.id-1,1)
-        
+
+    if (producto) {
+        productsDB.splice(producto.id - 1, 1)
+
         Swal.fire({
             position: 'top-end',
             icon: 'success',
             title: 'Producto eliminado',
             showConfirmButton: false,
             timer: 800
-          })
-    }else{
+        })
+    } else {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: 'Producto no encontrado',
             footer: '<a href="">Ingrese un producto válido</a>'
-          })
+        })
     }
     guardarProductosStorage();
 }
 
-let guardarProductosStorage = () =>{
+let guardarProductosStorage = () => {
     localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
 }
 
 
 
 
-botonVaciar.addEventListener("click", (e)=>{
+botonVaciar.addEventListener("click", (e) => {
     e.preventDefault();
     vaciarCarrito();
 });
-botonAgregar.addEventListener("click",(e)=> {
+botonAgregar.addEventListener("click", (e) => {
     e.preventDefault();
     agregarNuevosProducto();
     items.innerHTML = ""
     renderizarProductos();
 })
-botonEliminar.addEventListener("click",(e)=>{
+botonEliminar.addEventListener("click", (e) => {
     e.preventDefault();
     eliminarProducto()
     items.innerHTML = ""
     renderizarProductos();
-    
+    carritoHTML.innerHTML = ""
+    renderizarCarrito()
+
+
 })
