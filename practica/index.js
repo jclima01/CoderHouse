@@ -33,15 +33,17 @@ let guardarProductosStorage = () => {
 }
 
 let obtenerProductosStorage = () => {
-    JSON.parse(localStorage.getItem("carritoStorage"));
+    if(localStorage.getItem("productsDBStorage")!=null){
+        productsDB = JSON.parse(localStorage.getItem("productsDBStorage"))
+       }
 }
 let obtenerCarritoStorage = () => {
-    JSON.parse(localStorage.getItem("productsDBStorage"))
+    if(localStorage.getItem("carritoStorage")!=null){
+        productsDB = JSON.parse(localStorage.getItem("carritoStorage"))
+       }
 }
-guardarProductosStorage()
-guardarCarritoStorage()
-obtenerCarritoStorage()
-obtenerProductosStorage()
+// guardarProductosStorage()
+// guardarCarritoStorage()
 
 
 let carritoStorage = JSON.parse(localStorage.getItem("carritoStorage"));
@@ -149,24 +151,15 @@ function vaciarCarrito() {
 
     
 }
-
-botonEnviar.addEventListener("click", (e)=>{
-    
-    vaciarCarrito()
-  
-    mensaje = ""
-    guardarCarritoStorage()
-    
-})
-
 function iniciarChat(){
+    obtenerCarritoStorage();
     let total = document.getElementById("total")
     let direccion = document.getElementById("direccion").value;
     let nombreUsuario = document.getElementById("nombre-usuario").value;
     let apellidoUsuario = document.getElementById("apellido-usuario").value;
     let telefonoUsuario = document.getElementById("telefono-usuario").value;
     
-    let mensaje = `Nombre: ${nombreUsuario}
+    let mensaje = ` Nombre: ${nombreUsuario}
                     Apellido: ${apellidoUsuario}
                     Telefono: ${telefonoUsuario}
                     Su pedido es:`
@@ -186,7 +179,7 @@ function iniciarChat(){
 }
 
 function eliminarProducto() {
-
+    obtenerProductosStorage()
     let nombre = document.getElementById("nombre-eliminar").value.toLowerCase()
     let producto = productsDB.find((producto) => producto.nombre.toLowerCase() === nombre)
     let productoIx  = productsDB.indexOf(producto)
@@ -210,10 +203,13 @@ function eliminarProducto() {
         })
     }
     
-    guardarProductosStorage();
+    guardarProductosStorage()
+    
 }
 
 function agregarNuevosProducto() {
+    obtenerProductosStorage()
+
     let lastProduct = productsDB[productsDB.length-1]
     let id = lastProduct.id + 1;
     let nombre = document.getElementById("nombre").value;
@@ -238,8 +234,8 @@ function agregarNuevosProducto() {
         );
     }
 
-    guardarProductosStorage();
-
+    guardarProductosStorage()
+    
 
 }
 
@@ -253,19 +249,24 @@ botonAgregar.addEventListener("click", (e) => {
     agregarNuevosProducto();
     items.innerHTML = ""
     renderizarProductos();
-    guardarProductosStorage()
+
 })
 botonEliminar.addEventListener("click", (e) => {
     e.preventDefault();
     eliminarProducto()
     items.innerHTML = ""
     renderizarProductos();
-    carritoHTML.innerHTML = ""
-    renderizarCarrito()
-    guardarProductosStorage()
-
 
 })
+botonEnviar.addEventListener("click", (e)=>{
+    
+    vaciarCarrito()
+  
+    mensaje = ""
+    guardarCarritoStorage()
+    
+})
+
 
 //catalogo
 
