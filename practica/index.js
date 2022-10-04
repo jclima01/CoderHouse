@@ -16,7 +16,7 @@ new Producto(4, 'Muzza y jamon', 1950, 'Pizza de Muzzarella, Jamon Natural, Sals
 new Producto(5, 'Muzza y Morron', 1950, 'Pizza de Muzzarella, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'https://i.ibb.co/Qjn7RSP/Muzza-y-Morron.png'),
 new Producto(6, 'Muzzarella', 1950, 'Pizza de Muzzarella, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'https://i.ibb.co/x8XQjc6/Muzzarella.png')
 ]
-localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
+
 
 let carrito = [];
 const items = document.querySelector("#items");
@@ -25,11 +25,29 @@ const botonVaciar = document.querySelector("#boton-vaciar");
 const botonAgregar = document.getElementById("boton-agregar")
 const botonEliminar = document.getElementById("boton-eliminar");
 const botonEnviar = document.getElementById("boton-enviar");
+let guardarCarritoStorage = () => {
+    localStorage.setItem("carritoStorage", JSON.stringify(carrito));
+}
+let guardarProductosStorage = () => {
+    localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
+}
+
+let obtenerProductosStorage = () => {
+    JSON.parse(localStorage.getItem("carritoStorage"));
+}
+let obtenerCarritoStorage = () => {
+    JSON.parse(localStorage.getItem("productsDBStorage"))
+}
+guardarProductosStorage()
+guardarCarritoStorage()
+obtenerCarritoStorage()
+obtenerProductosStorage()
+
 
 let carritoStorage = JSON.parse(localStorage.getItem("carritoStorage"));
 carritoStorage ? carrito = carritoStorage : carrito = []
-// let productsDBStorage = JSON.parse(localStorage.getItem("productsDBStorage"))
-// productsDBStorage ? productsDB = productsDBStorage : alert("no hay productos en el storage");
+let productsDBStorage = JSON.parse(localStorage.getItem("productsDBStorage"))
+productsDBStorage ? productsDB = productsDBStorage : alert("no hay productos en el storage");
 
 renderizarProductos();
 renderizarCarrito();
@@ -52,8 +70,9 @@ function renderizarProductos() {
             </div> 
         `;
         items.innerHTML += productoHTML;
-
+        // 
     });
+   
 }
 //carrito
 function agregarProductoAlCarrito(id) {
@@ -90,6 +109,7 @@ function renderizarCarrito() {
 
 }
 function calcularTotal() {
+    
     let total = 0;
     carrito.forEach((prod) => {
         total += prod.precio * prod.cantidad
@@ -140,16 +160,22 @@ botonEnviar.addEventListener("click", (e)=>{
 })
 
 function iniciarChat(){
-    let total = document.getElementById("total");
-    let mensaje = "Bienvenidos a Dati Pizzería, Su pedido es:"
-    let direccion = document.getElementById("direccion")
+    let total = document.getElementById("total")
+    let direccion = document.getElementById("direccion").value;
+    let nombreUsuario = document.getElementById("nombre-usuario").value;
+    let apellidoUsuario = document.getElementById("apellido-usuario").value;
+    let telefonoUsuario = document.getElementById("telefono-usuario").value;
+    
+    let mensaje = `Nombre: ${nombreUsuario}
+                    Apellido: ${apellidoUsuario}
+                    Telefono: ${telefonoUsuario}
+                    Su pedido es:`
     carrito.forEach(producto => {
         
-        mensaje += `*Articulo:${producto.nombre},
-        %20Cantidad:%20${producto.cantidad}, 
+        mensaje += `*${producto.nombre} - ${producto.cantidad} U, 
         `;
     });
-    mensaje += `Dirección: ${direccion.value} Total: ${total.textContent}`
+    mensaje += `Dirección: ${direccion} Total: ${total.textContent}`
 
     
    
@@ -227,6 +253,7 @@ botonAgregar.addEventListener("click", (e) => {
     agregarNuevosProducto();
     items.innerHTML = ""
     renderizarProductos();
+    guardarProductosStorage()
 })
 botonEliminar.addEventListener("click", (e) => {
     e.preventDefault();
@@ -235,21 +262,11 @@ botonEliminar.addEventListener("click", (e) => {
     renderizarProductos();
     carritoHTML.innerHTML = ""
     renderizarCarrito()
+    guardarProductosStorage()
 
 
 })
-let guardarCarritoStorage = () => {
-    localStorage.setItem("carritoStorage", JSON.stringify(carrito));
-}
-let guardarProductosStorage = () => {
-    localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
-}
-let obtenerProductosStorage = () => {
-    
-}
-let obtenerCarritoStorage = () => {
 
-}
 //catalogo
 
 // let nombre = document.getElementById("nombre").value;
