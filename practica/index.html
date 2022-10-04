@@ -12,8 +12,9 @@
     <title>Dati Pizzeria</title>
 </head>
 
-<body>
+<div id="contenedor">
 
+</div>
     <h1>Dati Pizzeria</h1>
     <div class="container">
         <div class="row">
@@ -22,13 +23,21 @@
             </main>
             <aside class="col-sm-4">
                 <h2>Carrito</h2>
-                <!-- Elementos del carrito -->
+               
                 <div id="carrito" class="col-sm-8 row"></div>
                 <hr>
-                <!-- Precio total -->
+
                 <p class="text-right">Total: <span id="total"></span></p>
-                <button id="boton-vaciar" class="btn btn-danger">Vaciar</button>
-            </aside>
+                <button id="boton-vaciar" class="btn btn-danger">Vaciar</button> <br>
+                <label for="direccion" class="form-label">Dirección del pedido:</label>
+                <form>
+                <input type="text" class="form-control" id="direccion" required> 
+               
+                <a id="boton-enviar" class="btn btn-success" target="_blank" onclick="iniciarChat()">Enviar pedido por Whatsapp</a>
+                </form>
+                
+                
+              </aside>
         </div><br>
     </div>  
     <div class="col-md-6 p-5">

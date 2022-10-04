@@ -1,4 +1,3 @@
-
 class Producto {
     constructor(id, nombre, precio, descripcion, imagen) {
         this.id = id;
@@ -10,14 +9,14 @@ class Producto {
     }
 }
 
-const productsDB = [new Producto(1, 'Calabresa', 1950, 'Pizza de Muzzarella, Longaniza Calabresa, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'https://i.ibb.co/27zLq3m/Calabresa.png'),
+let productsDB = [new Producto(1, 'Calabresa', 1950, 'Pizza de Muzzarella, Longaniza Calabresa, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'https://i.ibb.co/27zLq3m/Calabresa.png'),
 new Producto(2, 'Especial', 2000, "Pizza de Muzzarella, Jamon Natural, Morrones , Salsa de Tomate, Condimentos y Aceitunas Verdes.", 'https://i.ibb.co/5cn3fQW/Especial.png'),
 new Producto(3, 'Fugazza', 1050, 'Pizza de Cebolla, Condimentos y Aceitunas Verdes. (sin Quesos)', 'https://i.ibb.co/MV4TzFG/Fugazza.png'),
 new Producto(4, 'Muzza y jamon', 1950, 'Pizza de Muzzarella, Jamon Natural, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'https://i.ibb.co/Dz9H9kr/Muzza-y-jamon.png'),
 new Producto(5, 'Muzza y Morron', 1950, 'Pizza de Muzzarella, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'https://i.ibb.co/Qjn7RSP/Muzza-y-Morron.png'),
 new Producto(6, 'Muzzarella', 1950, 'Pizza de Muzzarella, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'https://i.ibb.co/x8XQjc6/Muzzarella.png')
 ]
-
+localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
 
 let carrito = [];
 const items = document.querySelector("#items");
@@ -29,6 +28,8 @@ const botonEliminar = document.getElementById("boton-eliminar");
 
 let carritoStorage = JSON.parse(localStorage.getItem("carritoStorage"));
 carritoStorage ? carrito = carritoStorage : carrito = []
+let productsDBStorage = JSON.parse(localStorage.getItem("productsDBStorage"))
+productsDBStorage ? productsDB = productsDBStorage : alert("no hay productos en el storage");
 
 renderizarProductos();
 renderizarCarrito();
@@ -126,53 +127,50 @@ function vaciarCarrito() {
     })
     calcularTotal();
 
-
+    
 }
-let guardarCarritoStorage = () => {
-    localStorage.setItem("carritoStorage", JSON.stringify(carrito));
+
+
+
+let botonEnviar = document.getElementById("boton-enviar");
+
+botonEnviar.addEventListener("click", (e)=>{
+    
+    vaciarCarrito()
+  
+    mensaje = ""
+    guardarCarritoStorage()
+    
+})
+
+function iniciarChat(){
+    let total = document.getElementById("total");
+    let mensaje = "Bienvenidos a Dati Pizzería, Su pedido es:"
+    let direccion = document.getElementById("direccion")
+    carrito.forEach(producto => {
+        
+        mensaje += `*Articulo:${producto.nombre},
+        %20Cantidad:%20${producto.cantidad}, 
+        `;
+    });
+    mensaje += `Dirección: ${direccion.value} Total: ${total.textContent}`
+
+    
+   
+    botonEnviar.href = `https://wa.me/5492235304745?text=${mensaje}`
+    
+    guardarCarritoStorage()
+    
 }
-//catalogo
-function agregarNuevosProducto() {
 
-    let id = productsDB.length + 1;
-    let nombre = document.getElementById("nombre").value;
-    let precio = document.getElementById("precio").value;
-    let descripcion = document.getElementById("descripcion").value;
-    let imagen = document.getElementById("imagen").value;
-    if (productsDB.find((producto) => producto.nombre === nombre)) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Producto ya existente',
-            footer: '<a href="">Ingrese un producto nuevo</a>'
-        })
-    } else {
-        productsDB.push(new Producto(
-            id,
-            nombre,
-            precio,
-            descripcion,
-            imagen
-        )
-        );
-    }
-
-    guardarProductosStorage();
-
-
-}
-function capitalizarPrimeraLetra(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
 function eliminarProducto() {
 
     let nombre = document.getElementById("nombre-eliminar").value.toLowerCase()
-    let n = capitalizarPrimeraLetra(nombre)
-
-    let producto = productsDB.find((producto) => producto.nombre === n)
-
-    if (producto) {
-        productsDB.splice(producto.id - 1, 1)
+    let producto = productsDB.find((producto) => producto.nombre.toLowerCase() === nombre)
+    let productoIx  = productsDB.indexOf(producto)
+   
+    if (productoIx != -1) {
+        productsDB.splice(productoIx, 1)
 
         Swal.fire({
             position: 'top-end',
@@ -189,11 +187,8 @@ function eliminarProducto() {
             footer: '<a href="">Ingrese un producto válido</a>'
         })
     }
+    
     guardarProductosStorage();
-}
-
-let guardarProductosStorage = () => {
-    localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
 }
 
 
@@ -219,3 +214,77 @@ botonEliminar.addEventListener("click", (e) => {
 
 
 })
+let guardarCarritoStorage = () => {
+    localStorage.setItem("carritoStorage", JSON.stringify(carrito));
+}
+let guardarProductosStorage = () => {
+    localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
+}
+let obtenerProductosStorage = () => {
+    
+}
+let obtenerCarritoStorage = () => {
+
+}
+//catalogo
+
+// let nombre = document.getElementById("nombre").value;
+// let precio = document.getElementById("precio").value;
+// let descripcion = document.getElementById("descripcion").value;
+// let imagen = document.getElementById("imagen").value;
+// fetch('https://jsonplaceholder.typicode.com/posts', {
+//     method: 'POST',
+//     body: JSON.stringify({
+//         nombre: nombre,
+//         precio: precio,
+//         descripcion: descripcion,
+//         imagen: imagen,
+//     }),
+//     headers: {
+//         'Content-type': 'application/json; charset=UTF-8',
+//     },
+// })
+//     .then((response) => response.json())
+//     .then((json) => {
+    
+//     if (productsDB.find((producto) => producto.nombre === nombre)) {
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'Oops...',
+//             text: 'Producto ya existente',
+//             footer: '<a href="">Ingrese un producto nuevo</a>'
+//         })
+//     } else {
+//         productsDB.push(new Producto(
+//             json.id,
+//             json.nombre,
+//             json.precio,
+//             json.descripcion,
+//             json.imagen
+//         )
+//         );
+//     }
+
+//     guardarProductosStorage();
+
+//     });
+
+// const conseguirProductos = async () => { 
+//     try { 
+//         const reponse = await fetch("https://jsonplaceholder.typicode.com/posts"); 
+//         const data = await reponse.json(); 
+//         let contenedor = document.getElementById("contenedor"); 
+//         data.forEach((item) => { 
+//             let li = document.createElement("li"); 
+//             li.innerHTML = `
+//                 <h2>ID: ${item.id}</h2>
+//                 <h2>userId: ${item.userId}</h2>
+//                 <p>${item.title}</p>
+//                 <p>${item.body}</p>
+//                 <hr/>
+//                 `; 
+//                 contenedor.append(li);
+//             }); 
+//         } catch (error) { console.log(error); } 
+//     }; 
+// conseguirProductos();
