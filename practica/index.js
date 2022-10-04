@@ -24,12 +24,12 @@ const carritoHTML = document.querySelector("#carrito");
 const botonVaciar = document.querySelector("#boton-vaciar");
 const botonAgregar = document.getElementById("boton-agregar")
 const botonEliminar = document.getElementById("boton-eliminar");
-
+const botonEnviar = document.getElementById("boton-enviar");
 
 let carritoStorage = JSON.parse(localStorage.getItem("carritoStorage"));
 carritoStorage ? carrito = carritoStorage : carrito = []
-let productsDBStorage = JSON.parse(localStorage.getItem("productsDBStorage"))
-productsDBStorage ? productsDB = productsDBStorage : alert("no hay productos en el storage");
+// let productsDBStorage = JSON.parse(localStorage.getItem("productsDBStorage"))
+// productsDBStorage ? productsDB = productsDBStorage : alert("no hay productos en el storage");
 
 renderizarProductos();
 renderizarCarrito();
@@ -130,10 +130,6 @@ function vaciarCarrito() {
     
 }
 
-
-
-let botonEnviar = document.getElementById("boton-enviar");
-
 botonEnviar.addEventListener("click", (e)=>{
     
     vaciarCarrito()
@@ -191,7 +187,35 @@ function eliminarProducto() {
     guardarProductosStorage();
 }
 
+function agregarNuevosProducto() {
+    let lastProduct = productsDB[productsDB.length-1]
+    let id = lastProduct.id + 1;
+    let nombre = document.getElementById("nombre").value;
+    let precio = document.getElementById("precio").value;
+    let descripcion = document.getElementById("descripcion").value;
+    let imagen = document.getElementById("imagen").value;
+    if (productsDB.find((producto) => producto.nombre === nombre)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Producto ya existente',
+            footer: '<a href="">Ingrese un producto nuevo</a>'
+        })
+    } else {
+        productsDB.push(new Producto(
+            id,
+            nombre,
+            precio,
+            descripcion,
+            imagen
+        )
+        );
+    }
 
+    guardarProductosStorage();
+
+
+}
 
 //listeners
 botonVaciar.addEventListener("click", (e) => {
