@@ -49,7 +49,7 @@ let obtenerCarritoStorage = () => {
 let carritoStorage = JSON.parse(localStorage.getItem("carritoStorage"));
 carritoStorage ? carrito = carritoStorage : carrito = []
 let productsDBStorage = JSON.parse(localStorage.getItem("productsDBStorage"))
-productsDBStorage ? productsDB = productsDBStorage : alert("no hay productos en el storage");
+productsDBStorage ? productsDB = productsDBStorage : {}
 
 renderizarProductos();
 renderizarCarrito();
