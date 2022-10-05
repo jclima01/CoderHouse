@@ -17,6 +17,10 @@ new Producto(5, 'Muzza y Morron', 1950, 'Pizza de Muzzarella, Morrones, Salsa de
 new Producto(6, 'Muzzarella', 1950, 'Pizza de Muzzarella, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'https://i.ibb.co/x8XQjc6/Muzzarella.png')
 ]
 
+// localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
+// setDatos()
+
+
 
 let carrito = [];
 const items = document.querySelector("#items");
@@ -30,6 +34,7 @@ let guardarCarritoStorage = () => {
 }
 let guardarProductosStorage = () => {
     localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
+    
 }
 
 let obtenerProductosStorage = () => {
@@ -55,6 +60,14 @@ renderizarProductos();
 renderizarCarrito();
 calcularTotal();
 
+
+function setDatos(){
+    fetch("./data.json")
+    .then(response => response.json())
+    .then(data => {
+        data.push(JSON.stringify(productsDB))
+        return data
+})}
 function renderizarProductos() {
     let productoHTML = ""
 
@@ -204,7 +217,7 @@ function eliminarProducto() {
     }
     
     guardarProductosStorage()
-    
+    setDatos();
 }
 
 function agregarNuevosProducto() {
@@ -235,7 +248,7 @@ function agregarNuevosProducto() {
     }
 
     guardarProductosStorage()
-    
+    setDatos()
 
 }
 
