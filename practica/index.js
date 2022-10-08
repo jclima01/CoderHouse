@@ -17,11 +17,8 @@ new Producto(5, 'Muzza y Morron', 1950, 'Pizza de Muzzarella, Morrones, Salsa de
 new Producto(6, 'Muzzarella', 1950, 'Pizza de Muzzarella, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'https://i.ibb.co/x8XQjc6/Muzzarella.png')
 ]
 
-// localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
-// setDatos()
 
-
-
+let url = 'https://633ef66c83f50e9ba3bcfbe2.mockapi.io/Api'
 let carrito = [];
 const items = document.querySelector("#items");
 const carritoHTML = document.querySelector("#carrito");
@@ -29,27 +26,6 @@ const botonVaciar = document.querySelector("#boton-vaciar");
 const botonAgregar = document.getElementById("boton-agregar")
 const botonEliminar = document.getElementById("boton-eliminar");
 const botonEnviar = document.getElementById("boton-enviar");
-let guardarCarritoStorage = () => {
-    localStorage.setItem("carritoStorage", JSON.stringify(carrito));
-}
-let guardarProductosStorage = () => {
-    localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
-    
-}
-
-let obtenerProductosStorage = () => {
-    if(localStorage.getItem("productsDBStorage")!=null){
-        productsDB = JSON.parse(localStorage.getItem("productsDBStorage"))
-       }
-}
-let obtenerCarritoStorage = () => {
-    if(localStorage.getItem("carritoStorage")!=null){
-        productsDB = JSON.parse(localStorage.getItem("carritoStorage"))
-       }
-}
-// guardarProductosStorage()
-// guardarCarritoStorage()
-
 
 let carritoStorage = JSON.parse(localStorage.getItem("carritoStorage"));
 carritoStorage ? carrito = carritoStorage : carrito = []
@@ -60,14 +36,6 @@ renderizarProductos();
 renderizarCarrito();
 calcularTotal();
 
-
-function setDatos(){
-    fetch("./data.json")
-    .then(response => response.json())
-    .then(data => {
-        data.push(JSON.stringify(productsDB))
-        return data
-})}
 function renderizarProductos() {
     let productoHTML = ""
 
@@ -190,7 +158,7 @@ function iniciarChat(){
     guardarCarritoStorage()
     
 }
-
+//catalogo
 function eliminarProducto() {
     obtenerProductosStorage()
     let nombre = document.getElementById("nombre-eliminar").value.toLowerCase()
@@ -252,6 +220,28 @@ function agregarNuevosProducto() {
 
 }
 
+
+//storage
+let guardarCarritoStorage = () => {
+    localStorage.setItem("carritoStorage", JSON.stringify(carrito));
+}
+let guardarProductosStorage = () => {
+    localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
+    
+}
+
+let obtenerProductosStorage = () => {
+    if(localStorage.getItem("productsDBStorage")!=null){
+        productsDB = JSON.parse(localStorage.getItem("productsDBStorage"))
+       }
+}
+let obtenerCarritoStorage = () => {
+    if(localStorage.getItem("carritoStorage")!=null){
+        productsDB = JSON.parse(localStorage.getItem("carritoStorage"))
+       }
+}
+
+
 //listeners
 botonVaciar.addEventListener("click", (e) => {
     e.preventDefault();
@@ -280,66 +270,27 @@ botonEnviar.addEventListener("click", (e)=>{
     
 })
 
+async function getDatos(){
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+        data.push(JSON.stringify(productsDB))
+        console.log(data)
+})}
 
-//catalogo
-
-// let nombre = document.getElementById("nombre").value;
-// let precio = document.getElementById("precio").value;
-// let descripcion = document.getElementById("descripcion").value;
-// let imagen = document.getElementById("imagen").value;
-// fetch('https://jsonplaceholder.typicode.com/posts', {
-//     method: 'POST',
-//     body: JSON.stringify({
-//         nombre: nombre,
-//         precio: precio,
-//         descripcion: descripcion,
-//         imagen: imagen,
-//     }),
-//     headers: {
-//         'Content-type': 'application/json; charset=UTF-8',
-//     },
-// })
-//     .then((response) => response.json())
-//     .then((json) => {
+async function agregarProductosViaApi() {
+	productsDB.forEach(producto => {
+        let response = await fetch(url,
+            {
+                method: 'POST',
+                body:JSON.stringify(producto) ,
+                headers: {
+                  'Content-type': 'application/json; charset=UTF-8',
+                 },
+            }
+        );
+        let data = await response.json();    
+    });
     
-//     if (productsDB.find((producto) => producto.nombre === nombre)) {
-//         Swal.fire({
-//             icon: 'error',
-//             title: 'Oops...',
-//             text: 'Producto ya existente',
-//             footer: '<a href="">Ingrese un producto nuevo</a>'
-//         })
-//     } else {
-//         productsDB.push(new Producto(
-//             json.id,
-//             json.nombre,
-//             json.precio,
-//             json.descripcion,
-//             json.imagen
-//         )
-//         );
-//     }
-
-//     guardarProductosStorage();
-
-//     });
-
-// const conseguirProductos = async () => { 
-//     try { 
-//         const reponse = await fetch("https://jsonplaceholder.typicode.com/posts"); 
-//         const data = await reponse.json(); 
-//         let contenedor = document.getElementById("contenedor"); 
-//         data.forEach((item) => { 
-//             let li = document.createElement("li"); 
-//             li.innerHTML = `
-//                 <h2>ID: ${item.id}</h2>
-//                 <h2>userId: ${item.userId}</h2>
-//                 <p>${item.title}</p>
-//                 <p>${item.body}</p>
-//                 <hr/>
-//                 `; 
-//                 contenedor.append(li);
-//             }); 
-//         } catch (error) { console.log(error); } 
-//     }; 
-// conseguirProductos();
+}
+getResponse()
