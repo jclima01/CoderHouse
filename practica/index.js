@@ -16,9 +16,25 @@ new Producto(4, 'Muzza y jamon', 1950, 'Pizza de Muzzarella, Jamon Natural, Sals
 new Producto(5, 'Muzza y Morron', 1950, 'Pizza de Muzzarella, Morrones, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'https://i.ibb.co/Qjn7RSP/Muzza-y-Morron.png'),
 new Producto(6, 'Muzzarella', 1950, 'Pizza de Muzzarella, Salsa de Tomate, Condimentos y Aceitunas Verdes.', 'https://i.ibb.co/x8XQjc6/Muzzarella.png')
 ]
-
-
 let url = 'https://633ef66c83f50e9ba3bcfbe2.mockapi.io/Api'
+
+// async function postEnApi() {
+// 	productsDB.forEach(producto => {
+//         let response = await fetch(url,
+//             {
+//                 method: 'POST',
+//                 body:JSON.stringify(producto) ,
+//                 headers: {
+//                   'Content-type': 'application/json; charset=UTF-8',
+//                  },
+//             }
+//         );
+//         let data = await response.json();    
+//     });
+    
+// }
+// postEnApi()
+
 let carrito = [];
 const items = document.querySelector("#items");
 const carritoHTML = document.querySelector("#carrito");
@@ -27,6 +43,29 @@ const botonAgregar = document.getElementById("boton-agregar")
 const botonEliminar = document.getElementById("boton-eliminar");
 const botonEnviar = document.getElementById("boton-enviar");
 
+//storage
+let guardarCarritoStorage = () => {
+    localStorage.setItem("carritoStorage", JSON.stringify(carrito));
+}
+let guardarProductosStorage = () => {
+    localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
+    
+}
+
+let obtenerProductosStorage = () => {
+    if(localStorage.getItem("productsDBStorage")!=null){
+        productsDB = JSON.parse(localStorage.getItem("productsDBStorage"))
+       }
+}
+let obtenerCarritoStorage = () => {
+    if(localStorage.getItem("carritoStorage")!=null){
+        productsDB = JSON.parse(localStorage.getItem("carritoStorage"))
+       }
+}
+
+
+
+//
 let carritoStorage = JSON.parse(localStorage.getItem("carritoStorage"));
 carritoStorage ? carrito = carritoStorage : carrito = []
 let productsDBStorage = JSON.parse(localStorage.getItem("productsDBStorage"))
@@ -185,7 +224,7 @@ function eliminarProducto() {
     }
     
     guardarProductosStorage()
-    setDatos();
+   
 }
 
 function agregarNuevosProducto() {
@@ -216,30 +255,11 @@ function agregarNuevosProducto() {
     }
 
     guardarProductosStorage()
-    setDatos()
-
-}
-
-
-//storage
-let guardarCarritoStorage = () => {
-    localStorage.setItem("carritoStorage", JSON.stringify(carrito));
-}
-let guardarProductosStorage = () => {
-    localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
     
+
 }
 
-let obtenerProductosStorage = () => {
-    if(localStorage.getItem("productsDBStorage")!=null){
-        productsDB = JSON.parse(localStorage.getItem("productsDBStorage"))
-       }
-}
-let obtenerCarritoStorage = () => {
-    if(localStorage.getItem("carritoStorage")!=null){
-        productsDB = JSON.parse(localStorage.getItem("carritoStorage"))
-       }
-}
+
 
 
 //listeners
@@ -270,27 +290,3 @@ botonEnviar.addEventListener("click", (e)=>{
     
 })
 
-async function getDatos(){
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-        data.push(JSON.stringify(productsDB))
-        console.log(data)
-})}
-
-async function agregarProductosViaApi() {
-	productsDB.forEach(producto => {
-        let response = await fetch(url,
-            {
-                method: 'POST',
-                body:JSON.stringify(producto) ,
-                headers: {
-                  'Content-type': 'application/json; charset=UTF-8',
-                 },
-            }
-        );
-        let data = await response.json();    
-    });
-    
-}
-getResponse()
