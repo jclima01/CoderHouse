@@ -18,22 +18,25 @@ new Producto(6, 'Muzzarella', 1950, 'Pizza de Muzzarella, Salsa de Tomate, Condi
 ]
 let url = 'https://633ef66c83f50e9ba3bcfbe2.mockapi.io/Api'
 
-// async function postEnApi() {
-// 	productsDB.forEach(producto => {
-//         let response = await fetch(url,
-//             {
-//                 method: 'POST',
-//                 body:JSON.stringify(producto) ,
-//                 headers: {
-//                   'Content-type': 'application/json; charset=UTF-8',
-//                  },
-//             }
-//         );
-//         let data = await response.json();    
-//     });
-    
-// }
-// postEnApi()
+function postEnApi() {
+        productsDB.forEach(producto =>{
+            fetch(url,
+                {
+                    method: 'POST',
+                    body:JSON.stringify(producto) ,
+                    headers: {
+                      'Content-type': 'application/json; charset=UTF-8',
+                     },
+                }
+            )
+            .then(response => response.json())
+            .then(data => console.log(data))
+            
+            
+        })
+            
+    };
+postEnApi()
 
 let carrito = [];
 const items = document.querySelector("#items");
