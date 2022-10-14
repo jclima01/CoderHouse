@@ -20,18 +20,18 @@
 
 let url = 'https://633ef66c83f50e9ba3bcfbe2.mockapi.io/Api'
 let productsDB = []
-let cargarDatos = async() =>{
+let cargarDatos = async () => {
     await fetch(url)
-    .then(response => response.json())
-    .then(data => {
-        
-        productsDB = [...data]
-        console.log(productsDB)
-        guardarProductosStorage()
-    })
+        .then(response => response.json())
+        .then(data => {
+
+            productsDB = [...data]
+            guardarProductosStorage()
+            renderizarProductos()
+        })
 }
 cargarDatos()
-renderizarProductos();
+
 
 let carrito = [];
 const items = document.querySelector("#items");
@@ -47,29 +47,28 @@ let guardarCarritoStorage = () => {
 }
 let guardarProductosStorage = () => {
     localStorage.setItem("productsDBStorage", JSON.stringify(productsDB));
-    
+
 }
 
 let obtenerProductosStorage = () => {
-    if(localStorage.getItem("productsDBStorage")!=null){
+    if (localStorage.getItem("productsDBStorage") != null) {
         productsDB = JSON.parse(localStorage.getItem("productsDBStorage"))
-       }
+    }
 }
 let obtenerCarritoStorage = () => {
-    if(localStorage.getItem("carritoStorage")!=null){
+    if (localStorage.getItem("carritoStorage") != null) {
         productsDB = JSON.parse(localStorage.getItem("carritoStorage"))
-       }
+    }
 }
 
 
-
-//
+// Checks
 let carritoStorage = JSON.parse(localStorage.getItem("carritoStorage"));
 carritoStorage ? carrito = carritoStorage : carrito = []
 let productsDBStorage = JSON.parse(localStorage.getItem("productsDBStorage"))
 productsDBStorage ? productsDB = productsDBStorage : {}
 
-renderizarProductos();
+
 renderizarCarrito();
 calcularTotal();
 
@@ -92,7 +91,7 @@ function renderizarProductos() {
         items.innerHTML += productoHTML;
         // 
     });
-   
+
 }
 //carrito
 function agregarProductoAlCarrito(id) {
@@ -129,7 +128,7 @@ function renderizarCarrito() {
 
 }
 function calcularTotal() {
-    
+
     let total = 0;
     carrito.forEach((prod) => {
         total += prod.precio * prod.cantidad
@@ -167,49 +166,52 @@ function vaciarCarrito() {
     })
     calcularTotal();
 
-    
+
 }
-function iniciarChat(){
+function iniciarChat() {
     obtenerCarritoStorage();
     let total = document.getElementById("total")
     let direccion = document.getElementById("direccion").value;
     let nombreUsuario = document.getElementById("nombre-usuario").value;
     let apellidoUsuario = document.getElementById("apellido-usuario").value;
     let telefonoUsuario = document.getElementById("telefono-usuario").value;
-    
+
     let mensaje = `Nombre: ${nombreUsuario}
                     %0AApellido: ${apellidoUsuario}
                     %0ATeléfono: ${telefonoUsuario}
                     %0ADirección: ${direccion}
                     %0ASu pedido es:`
     carrito.forEach(producto => {
-        
+
         mensaje += `%0A*${producto.nombre} - ${producto.cantidad}, 
         `;
     });
     mensaje += `%0ATotal: ${total.textContent}`
 
-    
-   
+
+
     botonEnviar.href = `https://wa.me/5492236197018?text=${mensaje}`
-    
+
     guardarCarritoStorage()
-    
+
 }
 //catalogo
-function eliminarProducto() {
+async function eliminarProducto() {
     obtenerProductosStorage()
     let nombre = document.getElementById("nombre-eliminar").value.toLowerCase()
     let producto = productsDB.find((producto) => producto.nombre.toLowerCase() === nombre)
-    let productoIx  = productsDB.indexOf(producto)
+    let productoIx = productsDB.indexOf(producto)
     console.log(productoIx)
     console.log(producto.id)
-   
+
     if (productoIx != -1) {
         productsDB.splice(productoIx, 1)
-        // fetch(`https://633ef66c83f50e9ba3bcfbe2.mockapi.io/Api/${productoIx}`, {
-        // method: 'DELETE',
-// });
+        await fetch(`https://633ef66c83f50e9ba3bcfbe2.mockapi.io/Api/:${producto.id}`, {
+        method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        ;
         Swal.fire({
             position: 'top-end',
             icon: 'success',
@@ -225,16 +227,19 @@ function eliminarProducto() {
             footer: '<a href="">Ingrese un producto válido</a>'
         })
     }
-    
-    guardarProductosStorage()
-   
-}
 
+    guardarProductosStorage()
+
+}
+function isValidImageURL(imagen) {
+    if (typeof imagen !== 'string') return false;
+    return !!imagen.match(/\w+\.(jpg|jpeg|gif|png|tiff|bmp)$/gi);
+}
 async function agregarNuevosProducto() {
-    
+
     obtenerProductosStorage()
 
-    let lastProduct = productsDB[productsDB.length-1]
+    let lastProduct = productsDB[productsDB.length - 1]
     let id = lastProduct.id + 1;
     let nombre = document.getElementById("nombre").value;
     let precio = document.getElementById("precio").value;
@@ -247,56 +252,63 @@ async function agregarNuevosProducto() {
             text: 'Producto ya existente',
             footer: '<a>Ingrese un producto nuevo</a>'
         })
+    } else if (!isValidImageURL(imagen)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ruta de la imagen invalida',
+            footer: '<a>Ingrese una ruta valida</a>'
+        })
     } else {
-parseInt()
-        
         productsDB.push(
-            {id: parseInt(id),
-            nombre: nombre,
-            precio: precio,
-            descripcion: descripcion,
-            imagen: imagen}
+            {
+                id: parseInt(id),
+                nombre: nombre,
+                precio: precio,
+                descripcion: descripcion,
+                imagen: imagen
+            }
         );
         await fetch(url,
             {
                 method: 'POST',
-                body:JSON.stringify(productsDB[productsDB.length - 1]) ,
+                body: JSON.stringify(productsDB[productsDB.length - 1]),
                 headers: {
-                  'Content-type': 'application/json; charset=UTF-8',
-                 },
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
             }
         )
-        .then(response => response.json())
-        .then(data => console.log(data))
+            .then(response => response.json())
+            .then(data => console.log(data))
     }
 
-    
-    
+
+
 
     guardarProductosStorage()
-    
+
 
 }
-//time
+// //time
 
-const getTime = async () =>{
-    const date = document.getElementById("date");
-    fetch('http://worldtimeapi.org/api/timezone/America/Argentina/Buenos_Aires')
-    .then(response => response.json())
-    .then(data =>{
-        let date_time = data.datetime;
-        let time_zone = data.timezone;
-        let dayOfYear = data.day_of_year;
-        date.innerHTML =`
-            <li> Zona horaria: ${time_zone}</li>
-            <li> Fecha y hora: ${date_time}</li>
-            <li> Día del año: ${dayOfYear}</li>
-        `;
-    })
-    
-    
-}
-getTime();
+// const getTime = async () => {
+//     const date = document.getElementById("date");
+//     fetch('http://worldtimeapi.org/api/timezone/America/Argentina/Buenos_Aires')
+//         .then(response => response.json())
+//         .then(data => {
+//             let date_time = data.datetime;
+//             let time_zone = data.timezone;
+//             let dayOfYear = data.day_of_year;
+//             date.innerHTML = `
+//             <li> Zona horaria: ${time_zone}</li>
+//             <li> Fecha y hora: ${date_time}</li>
+//             <li> Día del año: ${dayOfYear}</li>
+//         `;
+//         })
+
+
+// }
+// getTime();
 
 
 //listeners
@@ -318,12 +330,12 @@ botonEliminar.addEventListener("click", (e) => {
     renderizarProductos();
 
 })
-botonEnviar.addEventListener("click", (e)=>{
-    
+botonEnviar.addEventListener("click", (e) => {
+
     vaciarCarrito()
-  
+
     mensaje = ""
     guardarCarritoStorage()
-    
+
 })
 
