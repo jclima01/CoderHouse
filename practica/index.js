@@ -19,7 +19,15 @@
 // console.log(JSON.stringify(productsDB))
 
 let url = 'https://633ef66c83f50e9ba3bcfbe2.mockapi.io/Api'
+let carrito = [];
 let productsDB = []
+const items = document.querySelector("#items");
+const carritoHTML = document.querySelector("#carrito");
+const botonVaciar = document.querySelector("#boton-vaciar");
+const botonAgregar = document.getElementById("boton-agregar")
+const botonEliminar = document.getElementById("boton-eliminar");
+const botonEnviar = document.getElementById("boton-enviar");
+//cargando data desde API
 let cargarDatos = async () => {
     await fetch(url)
         .then(response => response.json())
@@ -31,16 +39,6 @@ let cargarDatos = async () => {
         })
 }
 cargarDatos()
-
-
-let carrito = [];
-const items = document.querySelector("#items");
-const carritoHTML = document.querySelector("#carrito");
-const botonVaciar = document.querySelector("#boton-vaciar");
-const botonAgregar = document.getElementById("boton-agregar")
-const botonEliminar = document.getElementById("boton-eliminar");
-const botonEnviar = document.getElementById("boton-enviar");
-
 //storage
 let guardarCarritoStorage = () => {
     localStorage.setItem("carritoStorage", JSON.stringify(carrito));
@@ -190,7 +188,7 @@ function iniciarChat() {
 
 
 
-    botonEnviar.href = `https://wa.me/5492236197018?text=${mensaje}`
+    botonEnviar.href = `https://wa.me/5492235304745?text=${mensaje}`
 
     guardarCarritoStorage()
 
@@ -206,7 +204,7 @@ async function eliminarProducto() {
 
     if (productoIx != -1) {
         productsDB.splice(productoIx, 1)
-        await fetch(`https://633ef66c83f50e9ba3bcfbe2.mockapi.io/Api/:${producto.id}`, {
+        await fetch(`https://633ef66c83f50e9ba3bcfbe2.mockapi.io/Api/${producto.id}`, {
         method: 'DELETE',
         })
         .then(response => response.json())
