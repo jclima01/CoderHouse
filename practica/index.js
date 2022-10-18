@@ -204,11 +204,8 @@ async function eliminarProducto() {
 
     if (productoIx != -1) {
         productsDB.splice(productoIx, 1)
-        await fetch(`https://633ef66c83f50e9ba3bcfbe2.mockapi.io/Api/${producto.id}`, {
-        method: 'DELETE',
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
+        fetch(`${url}/${producto.id}`, { method: 'DELETE' })
+        .then(console.log('registro eliminado'))
         ;
         Swal.fire({
             position: 'top-end',
